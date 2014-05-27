@@ -1,0 +1,1 @@
+POST_JSON({uri:"AJAX_JSON_TEST"},function(o){console.log(o)}),POST_JSON({uri:"AJAX_JSON_TEST",paramStr:"thisis=parameter"},function(o){console.log(o)}),POST_JSON({uri:"AJAX_JSON_TEST",data:{thisis:"data"}},function(o){console.log(o)}),TestBox.POST_JSON({uri:"AJAX_JSON_TEST",data:{thisis:"data"}},function(o){console.log(o)});

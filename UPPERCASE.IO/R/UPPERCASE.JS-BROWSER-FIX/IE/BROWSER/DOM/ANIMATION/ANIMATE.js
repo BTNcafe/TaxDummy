@@ -1,0 +1,1 @@
+OVERRIDE(ANIMATE,function(){"use strict";global.ANIMATE=ANIMATE=METHOD({run:function(t,n,o){var i=n.node,e=n.keyframes,a=(n.duration,void 0===n.iterationCount?"":n.iterationCount);i.getDom().addStyle(e.getFinalStyle()),void 0===o||""!==a&&1!==a||DELAY(function(){o(i)})}})});

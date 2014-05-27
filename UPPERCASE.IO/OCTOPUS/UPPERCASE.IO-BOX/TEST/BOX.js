@@ -1,0 +1,1 @@
+var boxStore=TestBox.STORE("testStore");TestBox.View=CLASS({preset:function(){"use strict";return TestBox.VIEW},init:function(e,t,o){"use strict";var s,n;console.log("View Opened!"),o.onChangeParams=s=function(e){console.log(e)},o.close=n=function(){console.log("View Closed!")}}}),TestBox.MATCH_VIEW({uris:["test","test/{id}"],target:TestBox.View});

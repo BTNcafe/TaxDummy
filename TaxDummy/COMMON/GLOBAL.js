@@ -1,0 +1,1 @@
+TaxDummy.GLOBAL = {};
