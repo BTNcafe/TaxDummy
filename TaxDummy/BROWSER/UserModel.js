@@ -129,7 +129,7 @@ OVERRIDE(TaxDummy.UserModel, function(origin) {
 							padding : 10
 						},
 						children : ['오류: 페이스북 로그인이 작동하지 않습니다.']
-					}).appendTo(BODY);
+					});
 
 					checkRole();
 				}, 5000);
