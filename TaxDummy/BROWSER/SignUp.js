@@ -4,14 +4,11 @@ TaxDummy.SignUp = CLASS({
 		return VIEW;
 	},
 
-	init : function(cls, inner, self) {'use strict';
+	init : function(inner, self) {'use strict';
 
 		var
-		//IMRORT: TaxDummy.UserModel
-		UserModel = TaxDummy.UserModel,
-
 		// user model
-		userModel = UserModel(),
+		userModel = TaxDummy.UserModel,
 
 		// popup style
 		popupStyle = {
@@ -44,19 +41,14 @@ TaxDummy.SignUp = CLASS({
 		},
 
 		// wrapper
-		wrapper,
-
-		// close.
-		close;
-
 		wrapper = DIV({
 			style : {
 				backgroundColor : '#fff',
 				color : '#000',
 				padding : 30
 			},
-			children : [H1({
-				children : ['회원 가입']
+			c : [H1({
+				c : ['회원 가입']
 			}), UUI.VALID_FORM({
 				style : {
 					marginTop : 10
@@ -97,28 +89,28 @@ TaxDummy.SignUp = CLASS({
 					border : '1px solid #d8000c',
 					marginTop : -1
 				},
-				children : [UUI.FULL_INPUT({
-					wrapperStyle : {
+				c : [UUI.FULL_INPUT({
+					style : {
 						border : '1px solid #999'
 					},
 					name : 'username',
 					placeholder : '로그인 아이디'
 				}), UUI.FULL_INPUT({
-					wrapperStyle : {
+					style : {
 						marginTop : 10,
 						border : '1px solid #999'
 					},
 					name : 'name',
 					placeholder : '이름'
 				}), UUI.FULL_INPUT({
-					wrapperStyle : {
+					style : {
 						marginTop : 10,
 						border : '1px solid #999'
 					},
 					name : 'email',
 					placeholder : '이메일'
 				}), UUI.FULL_INPUT({
-					wrapperStyle : {
+					style : {
 						marginTop : 10,
 						border : '1px solid #999'
 					},
@@ -142,27 +134,26 @@ TaxDummy.SignUp = CLASS({
 
 						// loading
 						loading = UUI.LOADING({
-							wrapperStyle : popupStyle.wrapper,
+							style : popupStyle.wrapper,
 							contentStyle : popupStyle.content,
 							msg : '회원 가입중입니다.'
 						});
 
 						data.loginCount = 0;
 
-						userModel.create(data, function(result) {
+						userModel.create(data, {
+							
+							error : function(errors) {
+								loading.remove();
+								form.showErrors(errors);
+							},
+							
+							success : function(userData) {
 
-							var
-							// user data
-							userData = result.savedData;
-
-							loading.remove();
-
-							if (result.hasError === true) {
-								form.showErrors(result.errors);
-							} else {
+								loading.remove();
 
 								loading = UUI.LOADING({
-									wrapperStyle : popupStyle.wrapper,
+									style : popupStyle.wrapper,
 									contentStyle : popupStyle.content,
 									msg : '회원 인증중입니다.'
 								});
@@ -174,7 +165,7 @@ TaxDummy.SignUp = CLASS({
 									if (result.hasError === false) {
 
 										UUI.NOTICE({
-											wrapperStyle : popupStyle.wrapper,
+											style : popupStyle.wrapper,
 											contentStyle : popupStyle.content,
 											msg : '회원 가입하셨습니다.'
 										});
@@ -189,12 +180,8 @@ TaxDummy.SignUp = CLASS({
 			})]
 		}).appendTo(BODY);
 
-		//OVERRIDE: self.close
-		self.close = close = function(params) {
-
-			userModel.close();
-
+		inner.on('close', function() {
 			wrapper.remove();
-		};
+		});
 	}
 });

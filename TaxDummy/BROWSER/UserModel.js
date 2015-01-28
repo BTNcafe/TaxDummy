@@ -1,25 +1,28 @@
 OVERRIDE(TaxDummy.UserModel, function(origin) {
 
-	TaxDummy.UserModel = CLASS({
+	TaxDummy.UserModel = OBJECT({
 
 		preset : function() {
 			return origin;
 		},
 
-		init : function(cls, inner, self) {
+		init : function(inner, self) {
 
 			var
 			// sign in valid
 			signInValid = VALID(origin.signInValidDataSet),
 
 			// room
-			room = inner.getRoom(),
+			room = self.getRoom(),
 
 			// remember me store
 			rememberMeStore = TaxDummy.STORE('rememberMe'),
 
 			// sign facebook.
 			signFacebook,
+			
+			// is signed using facebook
+			isSignedUsingFacebook,
 
 			// sign in.
 			signIn,
@@ -50,7 +53,7 @@ OVERRIDE(TaxDummy.UserModel, function(origin) {
 						});
 					}
 
-					cls.isSignedUsingFacebook = true;
+					isSignedUsingFacebook = true;
 
 					if (callback !== undefined) {
 						callback(result);
@@ -121,14 +124,14 @@ OVERRIDE(TaxDummy.UserModel, function(origin) {
 				facebookTimeout = setTimeout(function() {
 
 					UUI.MODAL({
-						wrapperStyle : {
+						style : {
 							backgroundColor : '#000',
 							zIndex : 999999
 						},
 						contentStyle : {
 							padding : 10
 						},
-						children : ['오류: 페이스북 로그인이 작동하지 않습니다.']
+						c : ['오류: 페이스북 로그인이 작동하지 않습니다.']
 					});
 
 					checkRole();
@@ -152,7 +155,7 @@ OVERRIDE(TaxDummy.UserModel, function(origin) {
 
 			self.signOut = signOut = function(callback) {
 
-				if (cls.isSignedUsingFacebook === true) {
+				if (isSignedUsingFacebook === true) {
 
 					Facebook.signOut(function() {
 
@@ -162,7 +165,8 @@ OVERRIDE(TaxDummy.UserModel, function(origin) {
 							methodName : 'signOut'
 						}, callback);
 					});
-					delete cls.isSignedUsingFacebook;
+					
+					isSignedUsingFacebook = undefined;
 
 				} else {
 

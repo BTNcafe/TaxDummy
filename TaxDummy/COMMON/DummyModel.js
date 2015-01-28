@@ -1,38 +1,38 @@
-TaxDummy.DummyModel = CLASS({
+TaxDummy.DummyModel = OBJECT(function(cls) {'use strict';
 
-	statics : function(cls) {'use strict';
-
-		// valid dataSet
-		cls.validDataSet = {
-			userId : {
-				notEmpty : true,
-				id : true
-			},
-			name : {
-				notEmpty : true,
-				size : {
-					max : 255
-				}
+	// valid dataSet
+	cls.validDataSet = {
+		userId : {
+			notEmpty : true,
+			id : true
+		},
+		name : {
+			notEmpty : true,
+			size : {
+				max : 255
 			}
-		};
-	},
+		}
+	};
+	
+	return {
 
-	preset : function() {'use strict';
-		return TaxDummy.MODEL;
-	},
-
-	params : function(cls) {'use strict';
-
-		return {
-			name : 'Dummy',
-			config : {
-				create : {
-					valid : VALID(cls.validDataSet)
-				},
-				update : {
-					valid : VALID(cls.validDataSet)
+		preset : function() {'use strict';
+			return TaxDummy.MODEL;
+		},
+	
+		params : function() {'use strict';
+	
+			return {
+				name : 'Dummy',
+				methodConfig : {
+					create : {
+						valid : VALID(cls.validDataSet)
+					},
+					update : {
+						valid : VALID(cls.validDataSet)
+					}
 				}
-			}
-		};
-	}
+			};
+		}
+	};
 });

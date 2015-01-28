@@ -1,9 +1,13 @@
-require('./UPPERCASE.IO/BOOT.js');
+require(process.env['UPPERCASE_IO_PATH'] + '/BOOT.js');
 
 BOOT({
+	
 	CONFIG : {
-		port : 8814,
+		
+		webServerPort : 8814,
+		
 		defaultBoxName : 'TaxDummy',
+		
 		isDevMode : true,
 
 		/*Facebook : {
@@ -16,7 +20,8 @@ BOOT({
 			domain : 'localhost:8814'
 		}
 	},
-	SERVER_CONFIG : {
+	
+	NODE_CONFIG : {
 		dbName : 'TaxDummy',
 		maxDataCount : 10000,
 		isNotRequiringDBAuth : true

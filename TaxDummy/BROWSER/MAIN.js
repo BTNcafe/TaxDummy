@@ -1,39 +1,39 @@
 TaxDummy.MAIN = METHOD({
 
-	run : function(m, params) {'use strict';
+	run : function(params) {'use strict';
 
 		TaxDummy.MATCH_VIEW({
-			uris : [''],
+			uri : [''],
 			target : TaxDummy.Home
 		});
 
 		TaxDummy.MATCH_VIEW({
-			uris : ['SignIn'],
+			uri : ['SignIn'],
 			target : TaxDummy.SignIn
 		});
 
 		TaxDummy.MATCH_VIEW({
-			uris : ['Terms'],
+			uri : ['Terms'],
 			target : TaxDummy.Terms
 		});
 
 		TaxDummy.MATCH_VIEW({
-			uris : ['SignUp'],
+			uri : ['SignUp'],
 			target : TaxDummy.SignUp
 		});
 
 		TaxDummy.MATCH_VIEW({
-			uris : ['SignOut'],
+			uri : ['SignOut'],
 			target : TaxDummy.SignOut
 		});
 
 		TaxDummy.MATCH_VIEW({
-			uris : ['CreateDummy'],
+			uri : ['CreateDummy'],
 			target : TaxDummy.CreateDummy
 		});
 
 		TaxDummy.MATCH_VIEW({
-			uris : ['TaxList/{dummyId}'],
+			uri : ['TaxList/{dummyId}'],
 			target : TaxDummy.TaxList
 		});
 	}

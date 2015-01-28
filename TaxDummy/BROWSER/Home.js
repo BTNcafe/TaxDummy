@@ -4,20 +4,14 @@ TaxDummy.Home = CLASS({
 		return VIEW;
 	},
 
-	init : function(cls, inner, self) {'use strict';
+	init : function(inner, self) {'use strict';
 
 		var
-		//IMRORT: TaxDummy.UserModel
-		UserModel = TaxDummy.UserModel,
-
-		//IMRORT: TaxDummy.DummyModel
-		DummyModel = TaxDummy.DummyModel,
-
 		// user model
-		userModel = UserModel(),
+		userModel = TaxDummy.UserModel,
 
 		// dummy model
-		dummyModel = DummyModel(),
+		dummyModel = TaxDummy.DummyModel,
 
 		// popup style
 		popupStyle = {
@@ -53,21 +47,14 @@ TaxDummy.Home = CLASS({
 		wrapper,
 
 		// list
-		list,
+		list;
 
-		// on change params.
-		onChangeParams,
-
-		// close.
-		close;
-
-		//OVERRIDE: self.onChangeParams
-		self.onChangeParams = onChangeParams = function(params) {
+		inner.on('paramsChange', function() {
 
 			var
 			// loading
 			loading = UUI.LOADING({
-				wrapperStyle : popupStyle.wrapper,
+				style : popupStyle.wrapper,
 				contentStyle : popupStyle.content,
 				msg : '회원 인증 확인중입니다.'
 			});
@@ -79,77 +66,67 @@ TaxDummy.Home = CLASS({
 				// signed
 				if (result.isChecked === true) {
 
-					userModel.getData(result.userId, function(result) {
+					userModel.get(result.userId, function(userData) {
 
-						var
-						// user data
-						userData = result.savedData;
+						TaxDummy.GLOBAL.signedUserData = userData;
 
-						if (result.hasError === false) {
-
-							TaxDummy.GLOBAL.signedUserData = userData;
-
-							wrapper = DIV({
-								style : {
-									backgroundColor : '#fff',
-									color : '#000',
-									padding : 30
-								},
-								children : [H1({
-									children : ['TaxDummy']
-								}), list = UUI.LIST({
-									listStyle : {
-										marginTop : 10
-									}
-								}), UUI.BUTTON({
-									style : {
-										marginTop : 10,
-										border : '1px solid #999'
-									},
-									title : '더미 생성',
-									on : {
-										tap : function() {
-											TaxDummy.GO('CreateDummy');
-										}
-									}
-								}), UUI.BUTTON({
-									style : {
-										marginTop : 10,
-										border : '1px solid #999'
-									},
-									title : '로그아웃',
-									on : {
-										tap : function() {
-											TaxDummy.GO('SignOut');
-										}
-									}
-								})]
-							}).appendTo(BODY);
-
-							dummyModel.findDataSet({
-								filter : {}
-							}, function(result) {
-
-								if (result.hasError === false) {
-
-									EACH(result.savedDataSet, function(savedData) {
-										list.addItem({
-											key : 'folder-' + savedData.id,
-											item : LI({
-												children : [UUI.TEXT_BUTTON({
-													title : savedData.name,
-													on : {
-														tap : function() {
-															TaxDummy.GO('TaxList/' + savedData.id);
-														}
-													}
-												})]
-											})
-										});
-									});
+						wrapper = DIV({
+							style : {
+								backgroundColor : '#fff',
+								color : '#000',
+								padding : 30
+							},
+							c : [H1({
+								c : ['TaxDummy']
+							}), list = UUI.LIST({
+								listStyle : {
+									marginTop : 10
 								}
+							}), UUI.BUTTON({
+								style : {
+									marginTop : 10,
+									border : '1px solid #999'
+								},
+								title : '더미 생성',
+								on : {
+									tap : function() {
+										TaxDummy.GO('CreateDummy');
+									}
+								}
+							}), UUI.BUTTON({
+								style : {
+									marginTop : 10,
+									border : '1px solid #999'
+								},
+								title : '로그아웃',
+								on : {
+									tap : function() {
+										TaxDummy.GO('SignOut');
+									}
+								}
+							})]
+						}).appendTo(BODY);
+
+						dummyModel.find({
+							filter : {}
+						}, function(savedDataSet) {
+
+							EACH(savedDataSet, function(savedData) {
+								list.addItem({
+									key : 'folder-' + savedData.id,
+									item : LI({
+										c : [UUI.TEXT_BUTTON({
+											title : savedData.name,
+											on : {
+												tap : function() {
+													TaxDummy.GO('TaxList/' + savedData.id);
+												}
+											}
+										})]
+									})
+								});
 							});
-						}
+						});
 					});
 
 				}
@@ -159,17 +136,12 @@ TaxDummy.Home = CLASS({
 					TaxDummy.GO('SignIn');
 				}
 			});
-		};
+		});
 
-		//OVERRIDE: self.close
-		self.close = close = function(params) {
-
-			userModel.close();
-			dummyModel.close();
-
+		inner.on('close', function() {
 			if (wrapper !== undefined) {
 				wrapper.remove();
 			}
-		};
+		});
 	}
 });

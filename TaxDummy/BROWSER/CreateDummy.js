@@ -4,20 +4,14 @@ TaxDummy.CreateDummy = CLASS({
 		return VIEW;
 	},
 
-	init : function(cls, inner, self) {'use strict';
+	init : function(inner, self) {'use strict';
 
 		var
-		//IMRORT: TaxDummy.UserModel
-		UserModel = TaxDummy.UserModel,
-
-		//IMRORT: TaxDummy.DummyModel
-		DummyModel = TaxDummy.DummyModel,
-
 		// user model
-		userModel = UserModel(),
+		userModel = TaxDummy.UserModel,
 
 		// dummy model
-		dummyModel = DummyModel(),
+		dummyModel = TaxDummy.DummyModel,
 
 		// popup style
 		popupStyle = {
@@ -56,13 +50,10 @@ TaxDummy.CreateDummy = CLASS({
 		wrapper,
 
 		// form
-		form,
-
-		// close.
-		close;
+		form;
 
 		loading = UUI.LOADING({
-			wrapperStyle : popupStyle.wrapper,
+			style : popupStyle.wrapper,
 			contentStyle : popupStyle.content,
 			msg : '회원 인증 확인중입니다.'
 		});
@@ -84,8 +75,8 @@ TaxDummy.CreateDummy = CLASS({
 						color : '#000',
 						padding : 30
 					},
-					children : [H1({
-						children : ['더미 생성']
+					c : [H1({
+						c : ['더미 생성']
 					}), form = UUI.VALID_FORM({
 						style : {
 							marginTop : 10
@@ -105,8 +96,8 @@ TaxDummy.CreateDummy = CLASS({
 							border : '1px solid #d8000c',
 							marginTop : -1
 						},
-						children : [UUI.FULL_INPUT({
-							wrapperStyle : {
+						c : [UUI.FULL_INPUT({
+							style : {
 								border : '1px solid #999'
 							},
 							name : 'name',
@@ -128,31 +119,30 @@ TaxDummy.CreateDummy = CLASS({
 
 								// loading
 								loading = UUI.LOADING({
-									wrapperStyle : popupStyle.wrapper,
+									style : popupStyle.wrapper,
 									contentStyle : popupStyle.content,
 									msg : '더미 생성 중입니다.'
 								});
 
 								data.userId = userId;
 
-								dummyModel.create(data, function(result) {
+								dummyModel.create(data, {
+									
+									error : function(errors) {
+										loading.remove();
+										form.showErrors(errors);
+									},
+									
+									success : function(savedData) {
 
-									var
-									// saved data
-									savedData = result.savedData;
-
-									loading.remove();
-
-									if (result.hasError === true) {
-										form.showErrors(result.errors);
-									} else {
-
+										loading.remove();
+										
 										UUI.NOTICE({
-											wrapperStyle : popupStyle.wrapper,
+											style : popupStyle.wrapper,
 											contentStyle : popupStyle.content,
 											msg : '더미 생성 하셨습니다.'
 										});
-
+	
 										TaxDummy.GO('TaxList/' + savedData.id);
 									}
 								});
@@ -169,14 +159,10 @@ TaxDummy.CreateDummy = CLASS({
 			}
 		});
 
-		//OVERRIDE: self.close
-		self.close = close = function(params) {
-
-			dummyModel.close();
-
+		inner.on('close', function() {
 			if (wrapper !== undefined) {
 				wrapper.remove();
 			}
-		};
+		});
 	}
 });

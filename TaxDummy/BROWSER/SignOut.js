@@ -4,25 +4,14 @@ TaxDummy.SignOut = CLASS({
 		return VIEW;
 	},
 
-	init : function(cls, inner, self) {'use strict';
+	init : function(inner, self) {'use strict';
 
 		var
-		//IMRORT: TaxDummy.UserModel
-		UserModel = TaxDummy.UserModel,
-
 		// user model
-		userModel = UserModel(),
-
-		// close.
-		close;
+		userModel = TaxDummy.UserModel;
 
 		userModel.signOut(function() {
 			TaxDummy.GO('');
 		});
-
-		//OVERRIDE: self.close
-		self.close = close = function() {
-			userModel.close();
-		};
 	}
 });

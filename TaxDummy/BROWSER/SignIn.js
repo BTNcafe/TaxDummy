@@ -4,14 +4,11 @@ TaxDummy.SignIn = CLASS({
 		return VIEW;
 	},
 
-	init : function(cls, inner, self) {'use strict';
+	init : function(inner, self) {'use strict';
 
 		var
-		//IMRORT: TaxDummy.UserModel
-		UserModel = TaxDummy.UserModel,
-
 		// user model
-		userModel = UserModel(),
+		userModel = TaxDummy.UserModel,
 
 		// popup style
 		popupStyle = {
@@ -44,19 +41,14 @@ TaxDummy.SignIn = CLASS({
 		},
 
 		// wrapper
-		wrapper,
-
-		// close.
-		close;
-
 		wrapper = DIV({
 			style : {
 				backgroundColor : '#fff',
 				color : '#000',
 				padding : 30
 			},
-			children : [H1({
-				children : ['로그인']
+			c : [H1({
+				c : ['로그인']
 			}), UUI.VALID_FORM({
 				style : {
 					marginTop : 10
@@ -84,14 +76,14 @@ TaxDummy.SignIn = CLASS({
 					border : '1px solid #d8000c',
 					marginTop : -1
 				},
-				children : [UUI.FULL_INPUT({
-					wrapperStyle : {
+				c : [UUI.FULL_INPUT({
+					style : {
 						border : '1px solid #999'
 					},
 					name : 'username',
 					placeholder : '아이디'
 				}), UUI.FULL_INPUT({
-					wrapperStyle : {
+					style : {
 						marginTop : 10,
 						border : '1px solid #999'
 					},
@@ -99,7 +91,7 @@ TaxDummy.SignIn = CLASS({
 					name : 'password',
 					placeholder : '비밀번호'
 				}), UUI.FULL_CHECKBOX({
-					wrapperStyle : {
+					style : {
 						marginTop : 10,
 						color : '#777',
 						fontSize : 12
@@ -155,14 +147,12 @@ TaxDummy.SignIn = CLASS({
 
 						// loading
 						loading = UUI.LOADING({
-							wrapperStyle : popupStyle.wrapper,
+							style : popupStyle.wrapper,
 							contentStyle : popupStyle.content,
 							msg : '로그인 중입니다.'
 						});
 
 						userModel.signIn(data, function(result) {
-						
-						console.log(result);
 
 							loading.remove();
 
@@ -171,7 +161,7 @@ TaxDummy.SignIn = CLASS({
 							} else {
 
 								UUI.NOTICE({
-									wrapperStyle : popupStyle.wrapper,
+									style : popupStyle.wrapper,
 									contentStyle : popupStyle.content,
 									msg : '로그인 하셨습니다.'
 								});
@@ -184,12 +174,8 @@ TaxDummy.SignIn = CLASS({
 			})]
 		}).appendTo(BODY);
 
-		//OVERRIDE: self.close
-		self.close = close = function(params) {
-
-			userModel.close();
-
+		inner.on('close', function() {
 			wrapper.remove();
-		};
+		});
 	}
 });
