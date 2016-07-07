@@ -111,6 +111,8 @@ TaxDummy.TaxList = CLASS({
 									},
 									c : [H1({
 										c : ['Tax List']
+									}), H2({
+										c : '단일 전표 입력'
 									}), form = UUI.VALID_FORM({
 										style : {
 											marginTop : 10
@@ -157,7 +159,7 @@ TaxDummy.TaxList = CLASS({
 												marginTop : 10
 											},
 											name : 'price',
-											placeholder : '가격 (숫자만 입력해주세요.)',
+											placeholder : '가격',
 											on : {
 												change : function(e, input) {
 													input.setValue(input.getValue().replace(/[^A-Za-z0-9]/g, ''));
@@ -169,7 +171,7 @@ TaxDummy.TaxList = CLASS({
 												marginTop : 10
 											},
 											name : 'cardNumber',
-											placeholder : '카드 번호 (숫자만 입력해주세요.)',
+											placeholder : '카드 번호',
 											on : {
 												change : function(e, input) {
 													input.setValue(input.getValue().replace(/[^A-Za-z0-9]/g, ''));
@@ -181,7 +183,7 @@ TaxDummy.TaxList = CLASS({
 												backgroundColor : '#ff7100',
 												marginTop : 10
 											},
-											value : '카드 전표 생성 (숫자만 입력해주세요.)'
+											value : '카드 전표 생성'
 										})],
 										on : {
 											submit : function(e, form) {
@@ -222,6 +224,114 @@ TaxDummy.TaxList = CLASS({
 
 														bnInput.focus();
 													}
+												});
+											}
+										}
+									}), H2({
+										style : {
+											marginTop : 20
+										},
+										c : '여러 전표 입력'
+									}), UUI.VALID_FORM({
+										style : {
+											marginTop : 10
+										},
+										errorMsgStyle : {
+											padding : 5,
+											background : '#ffbaba',
+											color : '#d8000c',
+											border : '1px solid #d8000c',
+											marginTop : -1
+										},
+										c : [UUI.FULL_TEXTAREA({
+											style : {
+												border : '1px solid #999'
+											},
+											name : 'businessNumbers',
+											placeholder : '사업자 번호들'
+										}), UUI.FULL_TEXTAREA({
+											style : {
+												border : '1px solid #999',
+												marginTop : 10
+											},
+											name : 'prices',
+											placeholder : '가격들'
+										}), UUI.FULL_INPUT({
+											style : {
+												border : '1px solid #999',
+												marginTop : 10
+											},
+											name : 'cardNumber',
+											placeholder : '카드 번호',
+											on : {
+												change : function(e, input) {
+													input.setValue(input.getValue().replace(/[^A-Za-z0-9]/g, ''));
+												}
+											}
+										}), UUI.FULL_SUBMIT({
+											style : {
+												color : '#FFF',
+												backgroundColor : '#ff7100',
+												marginTop : 10
+											},
+											value : '카드 전표 생성'
+										})],
+										on : {
+											submit : function(e, form) {
+
+												var
+												// data
+												data = form.getData(),
+												
+												// business numbers
+												businessNumbers = data.businessNumbers.trim().split('\n'),
+												
+												// prices
+												prices = data.prices.trim().split('\n'),
+												
+												// card number
+												cardNumber = data.cardNumber;
+												
+												EACH(businessNumbers, function(businessNumber, i) {
+													
+													var
+													// data
+													data = {
+														dummyId : dummyId,
+														businessNumber : businessNumber.replace(/[^A-Za-z0-9]/g, ''),
+														price : prices[i].replace(/[^A-Za-z0-9]/g, ''),
+														cardNumber : cardNumber
+													},
+	
+													// loading
+													loading = UUI.LOADING({
+														style : popupStyle.wrapper,
+														contentStyle : popupStyle.content,
+														msg : '카드 전표 생성 중입니다.'
+													});
+													
+													billModel.create(data, {
+														
+														error : function(errors) {
+															loading.remove();
+															alert('오류가 발생하였습니다.');
+														},
+														
+														success : function(savedData) {
+															
+															loading.remove();
+															
+															UUI.NOTICE({
+																style : popupStyle.wrapper,
+																contentStyle : popupStyle.content,
+																msg : '카드 전표 생성 하셨습니다.'
+															});
+	
+															form.setData({
+																cardNumber : cardNumber
+															});
+														}
+													});
 												});
 											}
 										}
@@ -357,8 +467,8 @@ TaxDummy.TaxList = CLASS({
 											dataSet2[data.businessNumber + ':' + data.cardNumber] = {
 												businessNumber : data.businessNumber,
 												cardNumber : data.cardNumber,
-												price : Math.round(data.price * 10 / 11),
-												tax : data.price - Math.round(data.price * 10 / 11),
+												price : Math.ceil(data.price * 10 / 11),
+												tax : data.price - Math.ceil(data.price * 10 / 11),
 												count : 1
 											};
 										} else {
@@ -434,7 +544,7 @@ TaxDummy.TaxList = CLASS({
 													padding : 5,
 													border : '1px solid #999'
 												},
-												c : [savedData.businessNumber.replace(/(\d{3})(\d{2})(\d{5})/g, '$1-$2-$3')]
+												c : [savedData.businessNumber === undefined ? '' : savedData.businessNumber.replace(/(\d{3})(\d{2})(\d{5})/g, '$1-$2-$3')]
 											}), TD({
 												style : {
 													padding : 5,

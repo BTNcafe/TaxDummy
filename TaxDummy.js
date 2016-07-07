@@ -1,4 +1,4 @@
-require(process.env['UPPERCASE_IO_PATH'] + '/BOOT.js');
+require(process.env['UPPERCASE_PATH'] + '/BOOT.js');
 
 BOOT({
 	
@@ -23,7 +23,6 @@ BOOT({
 	
 	NODE_CONFIG : {
 		dbName : 'TaxDummy',
-		maxDataCount : 10000,
-		isNotRequiringDBAuth : true
+		maxDataCount : 10000
 	}
 });
